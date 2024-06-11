@@ -1,0 +1,86 @@
+[
+  {
+    "name": "User",
+    "attributes": {
+      "user_id": "INTEGER",
+      "user_name": "STRING",
+      "email": "STRING",
+      "password_hash": "STRING",
+      "user_type": "ENUM",
+      "credits": "INTEGER",
+      "storage_used": "FLOAT",
+      "storage_free": "FLOAT"
+    }
+  },
+  {
+    "name": "Category",
+    "attributes": {
+      "category_id": "INTEGER",
+      "category_name": "STRING"
+    }
+  },
+  {
+    "name": "Tag",
+    "attributes": {
+      "tag_id": "INTEGER",
+      "tag_name": "STRING"
+    }
+  },
+  {
+    "name": "Asset",
+    "attributes": {
+      "asset_id": "INTEGER",
+      "user_id": "INTEGER",
+      "file_name": "STRING",
+      "file_path": "STRING",
+      "visibility": "ENUM",
+      "description": "TEXT",
+      "category_id": "INTEGER",
+      "download_count": "INTEGER",
+      "asset_type": "ENUM"
+    }
+  },
+  {
+    "name": "AssetTag",
+    "attributes": {
+      "asset_id": "INTEGER",
+      "tag_id": "INTEGER"
+    }
+  },
+  {
+    "name": "Like",
+    "attributes": {
+      "like_id": "INTEGER",
+      "asset_id": "INTEGER",
+      "user_id": "INTEGER"
+    }
+  },
+  {
+    "name": "Download",
+    "attributes": {
+      "download_id": "INTEGER",
+      "asset_id": "INTEGER",
+      "user_id": "INTEGER",
+      "download_time": "DATE"
+    }
+  },
+  {
+    "name": "Comment",
+    "attributes": {
+      "comment_id": "INTEGER",
+      "asset_id": "INTEGER",
+      "user_id": "INTEGER",
+      "comment_text": "TEXT",
+      "comment_time": "DATE"
+    }
+  },
+  {
+    "name": "AssetOwnership",
+    "attributes": {
+      "ownership_id": "INTEGER",
+      "asset_id": "INTEGER",
+      "user_id": "INTEGER",
+      "ownership_type": "ENUM"
+    }
+  }
+]
