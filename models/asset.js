@@ -14,15 +14,18 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Asset.init({
-    asset_id: DataTypes.INTEGER,
+    asset_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     user_id: DataTypes.INTEGER,
     file_name: DataTypes.STRING,
     file_path: DataTypes.STRING,
-    visibility: DataTypes.ENUM('Public', 'Private'),
+    visibility: DataTypes.ENUM('public', 'private'),
     description: DataTypes.TEXT,
     category_id: DataTypes.INTEGER,
     download_count: DataTypes.INTEGER,
-    asset_type: DataTypes.ENUM('Free', 'Paid')
+    asset_type: DataTypes.ENUM('free', 'paid')
   }, {
     sequelize,
     modelName: 'Asset',

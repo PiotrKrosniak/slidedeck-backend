@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   AssetTag.init({
-    asset_id: DataTypes.INTEGER,
+    asset_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     tag_id: DataTypes.INTEGER
   }, {
     sequelize,

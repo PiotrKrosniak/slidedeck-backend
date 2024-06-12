@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       ownership_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       asset_id: {
         type: Sequelize.INTEGER
@@ -19,7 +20,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       ownership_type: {
-        type: Sequelize.ENUM('Owner', 'Editor')
+        type: Sequelize.ENUM('owner', 'editor')
       },
       createdAt: {
         allowNull: false,

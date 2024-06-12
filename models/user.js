@@ -14,11 +14,14 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    user_id: DataTypes.INTEGER,
+    user_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     user_name: DataTypes.STRING,
     email: DataTypes.STRING,
     password_hash: DataTypes.STRING,
-    user_type: DataTypes.ENUM('user', 'admin'),
+    user_type: DataTypes.ENUM('free', 'paid'),
     credits: DataTypes.INTEGER,
     storage_used: DataTypes.FLOAT,
     storage_free: DataTypes.FLOAT

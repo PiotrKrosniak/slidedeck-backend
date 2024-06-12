@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       asset_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       user_id: {
         type: Sequelize.INTEGER
@@ -22,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       visibility: {
-        type: Sequelize.ENUM('Public', 'Private')
+        type: Sequelize.ENUM('public', 'private')
       },
       description: {
         type: Sequelize.TEXT
@@ -34,7 +35,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       asset_type: {
-        type: Sequelize.ENUM('Free', 'Paid')
+        type: Sequelize.ENUM('free', 'paid')
       },
       createdAt: {
         allowNull: false,
