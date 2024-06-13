@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       user_name: {
         type: Sequelize.STRING
@@ -22,7 +23,7 @@ module.exports = {
         type: Sequelize.STRING
       },
       user_type: {
-        type: Sequelize.ENUM('user', 'admin')
+        type: Sequelize.ENUM('free', 'paid')
       },
       credits: {
         type: Sequelize.INTEGER

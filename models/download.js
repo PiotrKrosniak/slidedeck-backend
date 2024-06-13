@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Download.init({
-    download_id: DataTypes.INTEGER,
+    download_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     asset_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER,
     download_time: DataTypes.DATE

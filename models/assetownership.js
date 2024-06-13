@@ -14,10 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   AssetOwnership.init({
-    ownership_id: DataTypes.INTEGER,
+    ownership_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     asset_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER,
-    ownership_type: DataTypes.ENUM('Owner', 'Editor')
+    ownership_type: DataTypes.ENUM('owner', 'editor')
   }, {
     sequelize,
     modelName: 'AssetOwnership',

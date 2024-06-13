@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       like_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       asset_id: {
         type: Sequelize.INTEGER

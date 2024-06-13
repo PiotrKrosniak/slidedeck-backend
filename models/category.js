@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Category.init({
-    category_id: DataTypes.INTEGER,
+    category_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     category_name: DataTypes.STRING
   }, {
     sequelize,

@@ -2,7 +2,7 @@
   {
     "name": "User",
     "attributes": {
-      "user_id": "INTEGER",
+      "user_id": "UUID",
       "user_name": "STRING",
       "email": "STRING",
       "password_hash": "STRING",
@@ -15,21 +15,21 @@
   {
     "name": "Category",
     "attributes": {
-      "category_id": "INTEGER",
+      "category_id": "UUID",
       "category_name": "STRING"
     }
   },
   {
     "name": "Tag",
     "attributes": {
-      "tag_id": "INTEGER",
+      "tag_id": "UUID",
       "tag_name": "STRING"
     }
   },
   {
     "name": "Asset",
     "attributes": {
-      "asset_id": "INTEGER",
+      "asset_id": "UUID",
       "user_id": "INTEGER",
       "file_name": "STRING",
       "file_path": "STRING",
@@ -43,14 +43,14 @@
   {
     "name": "AssetTag",
     "attributes": {
-      "asset_id": "INTEGER",
+      "asset_id": "UUID",
       "tag_id": "INTEGER"
     }
   },
   {
     "name": "Like",
     "attributes": {
-      "like_id": "INTEGER",
+      "like_id": "UUID",
       "asset_id": "INTEGER",
       "user_id": "INTEGER"
     }
@@ -58,7 +58,7 @@
   {
     "name": "Download",
     "attributes": {
-      "download_id": "INTEGER",
+      "download_id": "UUID",
       "asset_id": "INTEGER",
       "user_id": "INTEGER",
       "download_time": "DATE"
@@ -67,7 +67,7 @@
   {
     "name": "Comment",
     "attributes": {
-      "comment_id": "INTEGER",
+      "comment_id": "UUID",
       "asset_id": "INTEGER",
       "user_id": "INTEGER",
       "comment_text": "TEXT",
@@ -77,7 +77,7 @@
   {
     "name": "AssetOwnership",
     "attributes": {
-      "ownership_id": "INTEGER",
+      "ownership_id": "UUID",
       "asset_id": "INTEGER",
       "user_id": "INTEGER",
       "ownership_type": "ENUM"

@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Like.init({
-    like_id: DataTypes.INTEGER,
+    like_id: {
+      type: DataTypes.UUID,
+      defaultValue: DataTypes.UUIDV4,
+    },
     asset_id: DataTypes.INTEGER,
     user_id: DataTypes.INTEGER
   }, {

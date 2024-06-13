@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       asset_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4
       },
       tag_id: {
         type: Sequelize.INTEGER
