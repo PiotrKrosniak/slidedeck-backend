@@ -1,0 +1,32 @@
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches:
+      - main  # or the branch you want to deploy from
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+
+    - name: Deploy to Lightsail
+      env:
+        HOST: 54.164.115.71
+        USER: bitnami
+        PM2_APP_NAME: slidedeck
+      run: |
+        ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+          cd /htdocs
+          git pull origin main
+          npm install
+          pm2 reload $PM2_APP_NAME
+        EOF
