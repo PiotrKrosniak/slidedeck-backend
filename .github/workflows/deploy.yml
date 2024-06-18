@@ -25,7 +25,7 @@ jobs:
         PM2_APP_NAME: slidedeck
       run: |
         ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-          cd /htdocs
+          cd htdocs
           git pull origin main
           npm install
           pm2 reload $PM2_APP_NAME
