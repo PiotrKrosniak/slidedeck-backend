@@ -1,10 +1,15 @@
 const express = require("express");
+// require("dotenv").config();
 const router = express.Router();
 const db = require("../../models/index");
 const { check } = require("express-validator");
 const passport = require("passport");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
-const { registerUser, loginUser } = require("../../controllers/auth.controller");
+const {
+  registerUser,
+  loginUser,
+  registerLoginUserWithGoogle,
+} = require("../../controllers/auth.controller");
 
 passport.use(
   new GoogleStrategy(
@@ -13,28 +18,7 @@ passport.use(
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "/auth/google/callback",
     },
-    async (token, tokenSecret, profile, done) => {
-      try {
-        let user = await db.User.findOne({
-          where: { email: profile.emails[0].value },
-        });
-        console.log('useruser', user);
-        if (!user) {
-          user = await db.User.create({
-            email: profile.emails[0].value,
-            user_name: profile.displayName,
-            user_type: "free",
-            credits: 0,
-            storage_used: 0,
-            storage_free: 0,
-          });
-        }
-
-        return done(null, user);
-      } catch (error) {
-        return done(error, false);
-      }
-    }
+    registerLoginUserWithGoogle
   )
 );
 
@@ -85,8 +69,9 @@ router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "/" }),
   (req, res) => {
-    // Successful authentication, redirect home.
-    res.redirect("http://localhost:3000");
+    const { token } = req.authInfo; // Get the token from authInfo
+    // Successful authentication, redirect home with token.
+    res.redirect(`${process.env.FRONT_END_URL}?token=${token}`);
   }
 );
 
@@ -95,7 +80,7 @@ router.get("/logout", (req, res, next) => {
     if (err) {
       return next(err);
     }
-    res.redirect("http://localhost:3000");
+    res.redirect(process.env.FRONT_END_URL);
   });
 });
 
