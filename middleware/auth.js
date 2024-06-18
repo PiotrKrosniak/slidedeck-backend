@@ -12,7 +12,7 @@ module.exports = function (req, res, next) {
 
   //verify token
   try {
-    const decoded = jwt.verify(token, config.get('jwtSecret'));
+    const decoded = jwt.verify(token, config.get('JWT_SECRET'));
     console.log('decoded user in middleware', decoded.user);
     req.user = decoded.user;
     next();
