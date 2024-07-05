@@ -1,36 +1,36 @@
 {
-  "name": "slidedeck-backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "type": "commonjs",
+  "name": "slidedeck-backend-strapi",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A Strapi application",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "migrate": "node manageModels.js"
+    "develop": "strapi develop",
+    "start": "strapi start",
+    "build": "strapi build",
+    "strapi": "strapi",
+    "deploy": "strapi deploy"
   },
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "aws-sdk": "^2.1643.0",
-    "bcryptjs": "^2.4.3",
-    "config": "^3.3.11",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.5",
-    "express": "^4.19.2",
-    "express-session": "^1.18.0",
-    "express-validator": "^7.1.0",
-    "gravatar": "^1.8.2",
-    "jsonwebtoken": "^9.0.2",
-    "nodemon": "^3.1.3",
-    "passport": "^0.7.0",
-    "passport-google-oauth20": "^2.0.0",
+    "@strapi/plugin-cloud": "4.25.1",
+    "@strapi/plugin-i18n": "4.25.1",
+    "@strapi/plugin-users-permissions": "4.25.1",
+    "@strapi/strapi": "4.25.1",
+    "better-sqlite3": "8.6.0",
     "pg": "^8.12.0",
-    "pg-hstore": "^2.3.4",
-    "sequelize": "^6.37.3",
-    "stripe": "^15.9.0"
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-router-dom": "5.3.4",
+    "styled-components": "5.3.3"
   },
-  "devDependencies": {
-    "sequelize-cli": "^6.6.2"
-  }
+  "author": {
+    "name": "A Strapi developer"
+  },
+  "strapi": {
+    "uuid": "d76094aa-05e8-48d9-8c84-0a6d3f963d53"
+  },
+  "engines": {
+    "node": ">=18.0.0 <=20.x.x",
+    "npm": ">=6.0.0"
+  },
+  "license": "MIT"
 }
