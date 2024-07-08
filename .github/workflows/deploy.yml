@@ -22,11 +22,11 @@ jobs:
       env:
         HOST: 34.233.211.47
         USER: bitnami
-        PM2_APP_NAME: slidedeck
+        PM2_APP_NAME: strapi-slidedeck 
       run: |
         ssh -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
           cd htdocs
           git pull origin main
           npm install
-          pm2 reload slidedeck
+          pm2 reload strapi-slidedeck
         EOF
