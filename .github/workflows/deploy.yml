@@ -20,7 +20,7 @@ jobs:
 
     - name: Deploy to Lightsail
       env:
-        HOST: 54.164.115.71
+        HOST: 34.233.211.47
         USER: bitnami
         PM2_APP_NAME: slidedeck
       run: |
