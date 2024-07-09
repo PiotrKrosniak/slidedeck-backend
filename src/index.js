@@ -25,10 +25,11 @@ module.exports = {
       ...userLifeCycles,
     });
 
-     // Example for another content type (e.g., post)
-    //  strapi.db.lifecycles.subscribe({
+    // Example for another content type (e.g., post)
+    // strapi.db.lifecycles.subscribe({
     //   models: ["plugin::content-type.post"], // Specify the model you want to apply lifecycles to
     //   ...postLifeCycles, // Import post lifecycle functions
     // });
+
   },
 };
