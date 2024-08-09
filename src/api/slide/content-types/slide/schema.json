@@ -30,6 +30,9 @@
     "objects": {
       "type": "text",
       "required": true
+    },
+    "thumbnail": {
+      "type": "text"
     }
   }
 }

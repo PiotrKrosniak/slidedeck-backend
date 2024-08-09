@@ -432,6 +432,7 @@ export interface ApiSlideSlide extends Schema.CollectionType {
       'api::project.project'
     >;
     objects: Attribute.Text & Attribute.Required;
+    thumbnail: Attribute.Text;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
