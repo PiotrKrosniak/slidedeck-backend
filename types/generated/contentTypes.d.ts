@@ -421,7 +421,6 @@ export interface ApiSlideSlide extends Schema.CollectionType {
   attributes: {
     name: Attribute.String &
       Attribute.Required &
-      Attribute.Unique &
       Attribute.SetMinMaxLength<{
         minLength: 1;
       }>;

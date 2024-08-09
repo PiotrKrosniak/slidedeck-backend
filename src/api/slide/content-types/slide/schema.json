@@ -15,7 +15,6 @@
     "name": {
       "type": "string",
       "required": true,
-      "unique": true,
       "minLength": 1
     },
     "slide_id": {
