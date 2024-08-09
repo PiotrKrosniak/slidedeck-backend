@@ -53,7 +53,7 @@ module.exports = createCoreController("api::slide.slide", ({ strapi }) => ({
     return this.transformResponse(sanitizedEntity);
   },
 
-  // delete by slide
+  // delete by slide id
   async delete(ctx) {
     // instead of the default id
     const { id } = ctx.params;

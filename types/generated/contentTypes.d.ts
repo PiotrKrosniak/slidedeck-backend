@@ -376,7 +376,6 @@ export interface ApiProjectProject extends Schema.CollectionType {
   attributes: {
     name: Attribute.String &
       Attribute.Required &
-      Attribute.Unique &
       Attribute.SetMinMaxLength<{
         minLength: 2;
       }>;
@@ -389,6 +388,7 @@ export interface ApiProjectProject extends Schema.CollectionType {
       'api::slide.slide'
     >;
     project_image: Attribute.Media<'images'>;
+    user_id: Attribute.String;
     createdAt: Attribute.DateTime;
     updatedAt: Attribute.DateTime;
     publishedAt: Attribute.DateTime;
