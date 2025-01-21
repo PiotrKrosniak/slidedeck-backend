@@ -1,0 +1,62 @@
+{
+  "kind": "collectionType",
+  "collectionName": "organizations",
+  "info": {
+    "singularName": "organization",
+    "pluralName": "organizations",
+    "displayName": "Organization",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "Name": {
+      "type": "string"
+    },
+    "PrimaryColor": {
+      "type": "string"
+    },
+    "SecondaryColor": {
+      "type": "string"
+    },
+    "Logo": {
+      "type": "text"
+    },
+    "OrgAdmin": {
+      "type": "email"
+    },
+    "Role": {
+      "type": "enumeration",
+      "enum": [
+        "admin",
+        "consumer"
+      ]
+    },
+    "LoginPortal": {
+      "type": "string"
+    },
+    "Domain": {
+      "type": "string"
+    },
+    "lms_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::lms-user.lms-user",
+      "mappedBy": "organization"
+    },
+    "courses": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::course.course",
+      "mappedBy": "organization"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "organizations"
+    }
+  }
+}

@@ -32,6 +32,12 @@
     },
     "thumbnail": {
       "type": "text"
+    },
+    "offsetWidth": {
+      "type": "string"
+    },
+    "offsetHeight": {
+      "type": "string"
     }
   }
 }

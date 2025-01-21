@@ -1,0 +1,48 @@
+{
+  "kind": "collectionType",
+  "collectionName": "scorms",
+  "info": {
+    "singularName": "scorm",
+    "pluralName": "scorms",
+    "displayName": "SCORM",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "userEmail": {
+      "type": "string"
+    },
+    "course_name": {
+      "type": "string"
+    },
+    "progress": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string"
+    },
+    "lastAccessedSlide": {
+      "type": "string"
+    },
+    "score": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::organization.organization"
+    },
+    "success_status": {
+      "type": "string"
+    },
+    "session_time": {
+      "type": "time"
+    },
+    "total_time": {
+      "type": "time"
+    }
+  }
+}

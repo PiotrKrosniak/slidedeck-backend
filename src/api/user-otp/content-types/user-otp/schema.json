@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "user_otps",
+  "info": {
+    "singularName": "user-otp",
+    "pluralName": "user-otps",
+    "displayName": "User_OTP",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "email": {
+      "type": "string"
+    },
+    "OTP": {
+      "type": "string"
+    },
+    "expires_at": {
+      "type": "datetime"
+    },
+    "attempts": {
+      "type": "integer"
+    }
+  }
+}

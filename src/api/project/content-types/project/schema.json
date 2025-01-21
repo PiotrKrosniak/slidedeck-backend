@@ -42,7 +42,126 @@
       ]
     },
     "user_id": {
-      "type": "string"
+      "type": "string",
+      "private": true
+    },
+    "purchases": {
+      "type": "integer"
+    },
+    "likes": {
+      "type": "integer"
+    },
+    "price": {
+      "type": "decimal"
+    },
+    "views": {
+      "type": "integer"
+    },
+    "category": {
+      "type": "enumeration",
+      "enum": [
+        "Compliance and Regulations",
+        "Leadership and Management",
+        "Sales and Customer Service",
+        "Diversity and Inclusion",
+        "Health and Safety",
+        "Onboarding and Orientation",
+        "Product Training",
+        "Soft Skills Development",
+        "Technical Skills",
+        "Software Training",
+        "IT & Network Security",
+        "Coding and Programming",
+        "Data Science & Analytics",
+        "Project Management Tools",
+        "Engineering and Architecture",
+        "Academic & Education",
+        "K-12 Education",
+        "Higher Education Courses",
+        "Exam Preparation (e.g., SAT, GRE, etc.)",
+        "Language Learning",
+        "Science, Technology, Engineering, and Math (STEM)",
+        "Arts and Humanities",
+        "Social Sciences",
+        "Personal Development",
+        "Time Management",
+        "Communication Skills",
+        "Emotional Intelligence",
+        "Goal Setting and Motivation",
+        "Mindfulness and Mental Health",
+        "Financial Literacy",
+        "Health & Wellness",
+        "Mental Health Awareness",
+        "Physical Fitness and Nutrition",
+        "First Aid and CPR",
+        "Stress Management",
+        "Workplace Wellness",
+        "Substance Abuse Prevention",
+        "Compliance & Certification",
+        "Industry-Specific Compliance (e.g., GDPR, HIPAA)",
+        "Safety and Hazard Training (e.g., OSHA)",
+        "Financial Compliance",
+        "Professional Certifications (e.g., PMP, Six Sigma)",
+        "Soft Skills Training",
+        "Leadership and Teamwork",
+        "Conflict Resolution",
+        "Negotiation Skills",
+        "Public Speaking and Presentation",
+        "Problem Solving and Critical Thinking",
+        "Customer Training",
+        "Product Usage and Features",
+        "Technical Support Guides",
+        "User Onboarding",
+        "Sales & Marketing",
+        "Digital Marketing Strategies",
+        "Sales Techniques and CRM",
+        "Brand and Content Strategy",
+        "Social Media Marketing",
+        "Industry-Specific Training",
+        "Healthcare and Medical Training",
+        "Retail and Service Industry Training",
+        "Hospitality and Tourism",
+        "Financial Services and Banking",
+        "Manufacturing and Logistics",
+        "Instructional Design & Education Technology",
+        "Instructional Strategies",
+        "eLearning Development and Tools",
+        "SCORM and LMS Best Practices",
+        "Content Authoring Techniques",
+        "Environmental & Sustainability",
+        "Green Business Practices",
+        "Climate Change Awareness",
+        "Corporate Social Responsibility",
+        "Energy Efficiency and Sustainability"
+      ]
+    },
+    "tags": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::tag.tag",
+      "inversedBy": "projects"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "private",
+        "public",
+        "draft"
+      ]
+    },
+    "deployed": {
+      "type": "boolean"
+    },
+    "deployedAt": {
+      "type": "datetime"
+    },
+    "description": {
+      "type": "text"
     }
   }
 }

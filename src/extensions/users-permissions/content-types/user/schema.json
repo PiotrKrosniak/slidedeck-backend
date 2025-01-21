@@ -79,6 +79,33 @@
     "storage_free": {
       "type": "decimal",
       "default": 0
+    },
+    "credits": {
+      "type": "decimal"
+    },
+    "account_status": {
+      "type": "decimal"
+    },
+    "location": {
+      "type": "string"
+    },
+    "comments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::comment.comment",
+      "mappedBy": "users_permissions_user"
+    },
+    "about": {
+      "type": "text"
+    },
+    "avatar": {
+      "type": "string"
+    },
+    "organizations": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::organization.organization",
+      "mappedBy": "user"
     }
   }
 }
