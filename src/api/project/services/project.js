@@ -86,22 +86,35 @@ module.exports = createCoreService("api::project.project", ({ strapi }) => ({
   },
 
   async updateSlides(projectId, slides) {
-    const project = await strapi.entityService.findOne("api::project.project", projectId, {
-      populate: { slides: true },
-    });
+    try {
+      const project = await strapi.db.query("api::project.project").findOne({
+        where: { project_id: projectId },
+      });
 
-    if (!project) {
-      throw new Error("Project not found");
-    }
+      if (!project) {
+        throw new Error("Project not found");
+      }
 
-    const updatedSlides = await Promise.all(
-      slides.map((slide) =>
-        strapi.entityService.update("api::slide.slide", slide.id, {
-          data: slide,
+      const updatedSlides = await Promise.all(
+        slides.map(async (slide) => {
+          const slidesOnDatabase = await strapi.db.query("api::slide.slide").findOne({
+            where: { slide_id: slide.id },
+          });
+
+          return strapi.entityService.update("api::slide.slide", slidesOnDatabase.id, {
+            data: {
+              ...slide,
+              objects: JSON.stringify(slide.media),
+              id: slidesOnDatabase.id
+            }
+          });
         })
-      )
-    );
+      );
 
-    return updatedSlides;
-  },
+      return updatedSlides.filter(slide => slide !== undefined);
+    } catch (error) {
+      console.error("Error updating slides:", error.message);
+      throw error;
+    }
+  }
 }));
