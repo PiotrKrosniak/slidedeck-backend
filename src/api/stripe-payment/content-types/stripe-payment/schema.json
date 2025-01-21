@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "stripe_payments",
+  "info": {
+    "singularName": "stripe-payment",
+    "pluralName": "stripe-payments",
+    "displayName": "stripe-payment"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "stripeSessionId": {
+      "type": "string"
+    },
+    "customerEmail": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string"
+    }
+  }
+}

@@ -9,8 +9,18 @@ const { createCoreService } = require("@strapi/strapi").factories;
 
 module.exports = createCoreService("api::project.project", ({ strapi }) => ({
   async create(params) {
+    // Debug log: Check if user_id is properly passed
+    console.log("params.body before creation:", params.body.user_id);
+    params.body = params.body || {}; // Initialize if undefined
     params.body.project_id = uuidv4();
     params.body.publishedAt = Date.now().toString();
+    params.body.name = params.body.name || "Duplicate Project";
+    // Set the custom user_id field if provided
+    if (params.body.user_id) {
+      params.body.user_id = params.body.user_id;  // Ensure user_id is retained
+    }
+    // Debug log: Check if user_id is retained
+    console.log('params.body just before calling create:', params.body.user_id);
     const results = await strapi.entityService.create("api::project.project", {
       data: params.body,
     });
@@ -73,5 +83,25 @@ module.exports = createCoreService("api::project.project", ({ strapi }) => ({
     );
 
     return projectWithImage;
+  },
+
+  async updateSlides(projectId, slides) {
+    const project = await strapi.entityService.findOne("api::project.project", projectId, {
+      populate: { slides: true },
+    });
+
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    const updatedSlides = await Promise.all(
+      slides.map((slide) =>
+        strapi.entityService.update("api::slide.slide", slide.id, {
+          data: slide,
+        })
+      )
+    );
+
+    return updatedSlides;
   },
 }));

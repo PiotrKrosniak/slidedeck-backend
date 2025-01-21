@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "payments",
+  "info": {
+    "singularName": "payment",
+    "pluralName": "payments",
+    "displayName": "Payment",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "txn_date": {
+      "type": "string"
+    },
+    "transaction_id": {
+      "type": "string"
+    },
+    "is_txn_successful": {
+      "type": "boolean"
+    },
+    "txn_message": {
+      "type": "text"
+    },
+    "txn_error_message": {
+      "type": "text"
+    },
+    "txn_amount": {
+      "type": "decimal"
+    },
+    "customer_name": {
+      "type": "string"
+    },
+    "customer_email": {
+      "type": "string"
+    }
+  }
+}
