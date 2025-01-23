@@ -1,0 +1,35 @@
+const AIGenerationService = require('../services/ai-generation');
+
+module.exports = {
+  async generateText(ctx) {
+    try {
+      const generatedText = await AIGenerationService.generateText(ctx.request.body.prompt);
+      ctx.body = { generatedText };
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = { error: error.message };
+    }
+  },
+
+  async generateImage(ctx) {
+    const { prompt } = ctx.request.body;
+    try {
+      const imageUrl = await AIGenerationService.generateImage(prompt);
+      ctx.body = { imageUrl };
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = { error: error.message };
+    }
+  },
+
+  async generateAudio(ctx) {
+    const { prompt } = ctx.request.body;
+    try {
+      const audioResponse = await AIGenerationService.generateAudio(prompt);
+      ctx.body = { audioData: audioResponse };
+    } catch (error) {
+      ctx.status = 500;
+      ctx.body = { error: error.message };
+    }
+  }
+};
