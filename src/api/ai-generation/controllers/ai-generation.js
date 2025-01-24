@@ -24,8 +24,9 @@ module.exports = {
 
   async generateAudio(ctx) {
     const { prompt } = ctx.request.body;
+    const userId = ctx.state.user.user_id
     try {
-      const audioResponse = await AIGenerationService.generateAudio(prompt);
+      const audioResponse = await AIGenerationService.generateAudio(prompt, userId);
       ctx.body = { audioData: audioResponse };
     } catch (error) {
       ctx.status = 500;
