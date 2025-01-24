@@ -1,5 +1,6 @@
 const OpenAI = require('openai').default;
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
 const S3_BUCKET_NAME = "slidesdeck";
 
@@ -23,17 +24,40 @@ class AIGenerationService {
     }
   }
 
-  async generateImage(prompt) {
-    try {
-      const response = await this.openai.images.generate({
-        model: "dall-e-3",
-        prompt: prompt,
-      });
-      return response.data[0].url;
-    } catch (error) {
-      throw new Error(`Image generation failed: ${error.message}`);
-    }
+async generateImage(prompt, userId) {
+  try {
+    const AIImageResponse = await this.openai.images.generate({
+      model: "dall-e-3",
+      prompt: prompt,
+    });
+
+    // Get the image URL from the response
+    const imageURL = AIImageResponse.data[0].url;
+
+
+    const response = await axios({
+      method: 'get',
+      url: imageURL,
+      responseType: 'arraybuffer'
+    });
+
+    // Convert to buffer
+    const buffer = Buffer.from(response.data);
+    
+    const fileName = `${userId}/image_list/user_upload_${uuidv4()}_${prompt?.replace(/ /g, '_')}.png`;
+    const params = {
+      Bucket: S3_BUCKET_NAME,
+      Key: fileName,
+      Body: buffer,
+      ContentType: 'image/png',
+    };
+    
+    const uploadedImageURL = await this.S3AWSStorageService.handleImageUpload(fileName, params);
+    return uploadedImageURL;
+  } catch (error) {
+    throw new Error(`Image generation failed: ${error.message}`);
   }
+}
 
   async generateAudio(prompt, userId) {
     try {

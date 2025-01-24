@@ -42,6 +42,32 @@ class S3AWSStorageService {
       throw error;
     }
   }
+  async handleImageUpload(fileName, params) {
+    try {
+      const uploadCommand = new PutObjectCommand({
+        Bucket: params.Bucket,
+        Key: fileName,
+        Body: params.Body,
+        ContentType: params.ContentType
+      });
+
+      await this.s3.send(uploadCommand);
+
+      // Generate a signed URL using getSignedUrl
+      const getObjectCommand = new GetObjectCommand({
+        Bucket: params.Bucket,
+        Key: fileName
+      });
+
+      // @ts-ignore
+      const imageURL = await getSignedUrl(this.s3, getObjectCommand, { expiresIn: 100000 });
+
+      return imageURL;
+    } catch (error) {
+      console.error("Error uploading file to S3:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new S3AWSStorageService();

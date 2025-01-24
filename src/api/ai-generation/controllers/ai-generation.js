@@ -13,8 +13,9 @@ module.exports = {
 
   async generateImage(ctx) {
     const { prompt } = ctx.request.body;
+    const userId = ctx.state.user.user_id
     try {
-      const imageUrl = await AIGenerationService.generateImage(prompt);
+      const imageUrl = await AIGenerationService.generateImage(prompt, userId);
       ctx.body = { imageUrl };
     } catch (error) {
       ctx.status = 500;
