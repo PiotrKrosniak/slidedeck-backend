@@ -6,6 +6,8 @@
 
 module.exports = (config, { strapi }) => {
   return async (ctx, next) => {
+    const path = ctx.request.path
+    const service = await strapi.db.query('api::paid-service.paid-service').findOne({ route: path });
     const user = ctx.state.user;
 
     if (!user) {
@@ -45,6 +47,11 @@ module.exports = (config, { strapi }) => {
           throw new Error('Failed to deduct credits');
         }
       };
+
+      if (service && service.isPaid) {
+        const cost = service.cost || 0;
+        await ctx.deductCredits(cost);
+      }
 
       await next();
 

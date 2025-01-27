@@ -1245,6 +1245,35 @@ export interface ApiOrganizationOrganization extends Schema.CollectionType {
   };
 }
 
+export interface ApiPaidServicePaidService extends Schema.CollectionType {
+  collectionName: 'paid-service';
+  info: {
+    singularName: 'paid-service';
+    pluralName: 'paid-services';
+    displayName: 'Paid Service';
+  };
+  attributes: {
+    name: Attribute.String & Attribute.Required & Attribute.Unique;
+    route: Attribute.String & Attribute.Required & Attribute.Unique;
+    isPaid: Attribute.Boolean & Attribute.DefaultTo<false>;
+    cost: Attribute.Integer & Attribute.DefaultTo<0>;
+    createdAt: Attribute.DateTime;
+    updatedAt: Attribute.DateTime;
+    createdBy: Attribute.Relation<
+      'api::paid-service.paid-service',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+    updatedBy: Attribute.Relation<
+      'api::paid-service.paid-service',
+      'oneToOne',
+      'admin::user'
+    > &
+      Attribute.Private;
+  };
+}
+
 export interface ApiPaymentPayment extends Schema.CollectionType {
   collectionName: 'payments';
   info: {
@@ -1715,6 +1744,7 @@ declare module '@strapi/types' {
       'api::lms-user.lms-user': ApiLmsUserLmsUser;
       'api::newsletter.newsletter': ApiNewsletterNewsletter;
       'api::organization.organization': ApiOrganizationOrganization;
+      'api::paid-service.paid-service': ApiPaidServicePaidService;
       'api::payment.payment': ApiPaymentPayment;
       'api::product.product': ApiProductProduct;
       'api::project.project': ApiProjectProject;

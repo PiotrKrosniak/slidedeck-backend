@@ -1,0 +1,31 @@
+{
+    "kind": "collectionType",
+    "collectionName": "paid-service",
+    "info": {
+      "singularName": "paid-service",
+      "pluralName": "paid-services",
+      "displayName": "Paid Service"
+    },
+    "attributes": {
+      "name": {
+        "type": "string",
+        "required": true,
+        "unique": true
+      },
+      "route": {
+        "type": "string",
+        "required": true,
+        "unique": true,
+        "description": "The route associated with this service"
+      },
+      "isPaid": {
+        "type": "boolean",
+        "default": false
+      },
+      "cost": {
+        "type": "integer",
+        "default": 0
+      }
+    }
+  }
+  
