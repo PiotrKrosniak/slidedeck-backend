@@ -774,7 +774,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     user_type: Attribute.String;
     storage_used: Attribute.Decimal & Attribute.DefaultTo<0>;
     storage_free: Attribute.Decimal & Attribute.DefaultTo<0>;
-    credits: Attribute.Decimal;
+    credits: Attribute.Decimal & Attribute.DefaultTo<50>;
     account_status: Attribute.Decimal;
     location: Attribute.String;
     comments: Attribute.Relation<

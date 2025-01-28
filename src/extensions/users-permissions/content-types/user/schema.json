@@ -81,7 +81,8 @@
       "default": 0
     },
     "credits": {
-      "type": "decimal"
+      "type": "decimal",
+      "default": 50
     },
     "account_status": {
       "type": "decimal"
