@@ -1,7 +1,7 @@
 
 class AddCreditsService {
 
-    async addCredits(stripeData) {
+    async #addCredits(stripeData) {
         try {
             const { email, credits } = stripeData;
 
@@ -22,6 +22,10 @@ class AddCreditsService {
         } catch (error) {
             throw new Error(`There has been an error while adding credits: ${error.message}`);
         }
+    }
+
+    async handleStripeWebhook(stripeData) {
+        return this.#addCredits(stripeData);
     }
 }
 

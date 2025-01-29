@@ -1,5 +1,6 @@
 const stripe = require('stripe')(process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY); // Ensure Stripe secret key is in your .env file
 const axios = require('axios');
+const AddCreditsService = require('../../add-credits/services/add-credits');
 
 module.exports = {
   async handleStripeWebhook(ctx) {
@@ -55,6 +56,13 @@ module.exports = {
           console.error('Missing metadata fields for project duplication.');
         }
       }
+
+      // PENDING TO IMPLEMENT TO ADD CREDITS TO USER DEPENDING ON THE SUBSCRIPTION PLAN
+
+      await AddCreditsService.handleStripeWebhook({
+        email: session.customer_details.email,
+        credits: 457
+      });
     }
 
     // handle subscription payment succeeded event
@@ -63,9 +71,15 @@ module.exports = {
       // AND UPDATE THE USER'S SUBSCRIPTION STATUS
     }
 
-    // handle credits purchase event
+    // handle credits purchase event pending to check if event is correct and removed hard coded credits
     if (event.type === 'payment_intent.succeeded') {
-      // PENDING TO IMPLEMENT TO ADD CREDITS TO USER with ADD Credits Service
+      const session = event.data.object;
+      const body = {
+        email: session.customer_details.email,
+        credits: 457,
+      }
+
+      AddCreditsService.handleStripeWebhook(body)
     }
 
     // Return 200 to acknowledge receipt of the event
