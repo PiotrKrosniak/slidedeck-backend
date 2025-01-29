@@ -57,6 +57,17 @@ module.exports = {
       }
     }
 
+    // handle subscription payment succeeded event
+    if (event.type === 'invoice.payment_succeeded') {
+      // PENDING TO IMPLEMENT TO ADD CREDITS TO USER DEPENDING ON THE SUBSCRIPTION PLAN
+      // AND UPDATE THE USER'S SUBSCRIPTION STATUS
+    }
+
+    // handle credits purchase event
+    if (event.type === 'payment_intent.succeeded') {
+      // PENDING TO IMPLEMENT TO ADD CREDITS TO USER with ADD Credits Service
+    }
+
     // Return 200 to acknowledge receipt of the event
     ctx.send({ received: true });
   },
