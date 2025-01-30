@@ -61,7 +61,7 @@ module.exports = {
 
       await AddCreditsService.handleStripeWebhook({
         email: session.customer_details.email,
-        credits: 457
+        credits: session.metadata.credits
       });
     }
 
@@ -76,7 +76,7 @@ module.exports = {
       const session = event.data.object;
       const body = {
         email: session.customer_details.email,
-        credits: 457,
+        credits: session.metadata.credits,
       }
 
       AddCreditsService.handleStripeWebhook(body)
