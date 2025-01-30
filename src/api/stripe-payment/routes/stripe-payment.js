@@ -17,5 +17,13 @@ module.exports = {
           auth: false,  // Make sure this route is accessible
         },
       },
+      {
+        method: 'POST',
+        path: '/create-checkout-session-for-credits',
+        handler: 'stripe-payment.createCheckoutSessionForCredits', // Make sure the handler points to the correct function
+        config: {
+          auth: false,  // Make sure this route is accessible
+        },
+      },
     ],
   };
