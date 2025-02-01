@@ -1,4 +1,5 @@
 'use strict';
+const axios = require('axios');
 
 /**
  * stripe-payment controller
@@ -98,5 +99,4 @@ module.exports = createCoreController('api::stripe-payment.stripe-payment', ({ s
       ctx.send({ error: 'Failed to create checkout session' }, 500);
     }
   },
-
 }));

@@ -17,6 +17,7 @@ class StripeService {
 
       const subscriptionProducts = [];
       const oneTimeProducts = [];
+      const creditsPlans = [];
 
       for (const product of products.data) {
         const prices = await stripe.prices.list({
@@ -44,6 +45,8 @@ class StripeService {
 
         if (hasSubscription) {
           subscriptionProducts.push(formattedProduct);
+        } else if (product.metadata?.credits) {
+          creditsPlans.push(formattedProduct);
         } else {
           oneTimeProducts.push(formattedProduct);
         }
@@ -51,7 +54,8 @@ class StripeService {
 
       return {
         subscriptions: subscriptionProducts,
-        oneTimeProducts: oneTimeProducts
+        oneTimeProducts: oneTimeProducts,
+        creditsPlans: creditsPlans
       };
     } catch (error) {
       throw new Error(`Failed to fetch products: ${error.message}`);
