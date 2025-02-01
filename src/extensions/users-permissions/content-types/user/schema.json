@@ -107,6 +107,10 @@
       "relation": "oneToMany",
       "target": "api::organization.organization",
       "mappedBy": "user"
+    },
+    "subscription_id": {
+      "type": "string",
+      "unique": true
     }
   }
 }

@@ -58,8 +58,20 @@ module.exports = createCoreService('api::stripe-payment.stripe-payment', ({ stra
                 throw new Error('Missing required parameters for subscription event');
             }
 
-            // PENDING TO ADD SUBSCRIPTION API
-            const subscriptionResponse = { data: 'Subscription added successfully' };
+            // UPDATE SUBSCRIPTION_ID IN USER
+            const user = await strapi.db.query('plugin::users-permissions.user').findOne({
+                where: { email },
+            });
+
+            if (user) {
+                await strapi.db.query('plugin::users-permissions.user').update({
+                    where: { email },
+                    data: {
+                        subscription_id: subscription,
+                    },
+                });
+            }
+            
 
             // Add credits of subscription
             if (credits) {
