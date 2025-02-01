@@ -1,5 +1,4 @@
 'use strict';
-const axios = require('axios');
 
 /**
  * stripe-payment controller
