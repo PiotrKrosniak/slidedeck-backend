@@ -58,6 +58,7 @@ module.exports = {
           email: session.customer_details.email,
           subscription: session.subscription,
           credits: session?.metadata?.credits,
+          selectedSubscriptionTime: session?.metadata?.selectedSubscriptionTime,
         });
       }
 

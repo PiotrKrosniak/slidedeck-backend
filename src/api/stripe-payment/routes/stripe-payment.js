@@ -25,5 +25,13 @@ module.exports = {
           auth: false,  // Make sure this route is accessible
         },
       },
+      {
+        method: 'POST',
+        path: '/create-checkout-session-for-subscriptions',
+        handler: 'stripe-payment.createCheckoutSessionForSubscriptions', // Make sure the handler points to the correct function
+        config: {
+          auth: false,  // Make sure this route is accessible
+        },
+      },
     ],
   };

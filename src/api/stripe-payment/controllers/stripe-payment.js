@@ -98,4 +98,42 @@ module.exports = createCoreController('api::stripe-payment.stripe-payment', ({ s
       ctx.send({ error: 'Failed to create checkout session' }, 500);
     }
   },
+  async createCheckoutSessionForSubscriptions(ctx) {
+    try {
+      const { successUrl, cancelUrl, customerEmail, productId, priceId, selectedSubscriptionTime } = ctx.request.body;
+
+      const product = await stripe.products.retrieve(productId);
+
+      // Extract the number of credits from the product metadata
+      const credits = product.metadata.credits ? parseInt(product.metadata.credits, 10) : 0;
+
+      // Create a new Stripe Checkout session using the existing price
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'subscription',
+        line_items: [
+          {
+            price: priceId, // Use the existing price ID
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          credits,
+          selectedSubscriptionTime: selectedSubscriptionTime,
+        },
+        customer_email: customerEmail, // Optional: Pre-fill the customer’s email if available
+        success_url: successUrl,       // Redirect here on successful payment
+        cancel_url: cancelUrl,         // Redirect here if the user cancels payment
+      });
+
+      // Return the session ID and URL for the frontend
+      ctx.send({
+        id: session.id,
+        url: session.url, // Stripe Checkout URL
+      });
+    } catch (err) {
+      console.log(err);
+      ctx.send({ error: 'Failed to create checkout session' }, 500);
+    }
+  },
 }));

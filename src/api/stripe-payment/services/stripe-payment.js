@@ -52,7 +52,7 @@ module.exports = createCoreService('api::stripe-payment.stripe-payment', ({ stra
             throw err;
         }
     },
-    async handleSubscriptionEvent({ email, credits, subscription }) {
+    async handleSubscriptionEvent({ email, credits, subscription, selectedSubscriptionTime }) {
         try {
             if (!email || !subscription) {
                 throw new Error('Missing required parameters for subscription event');
@@ -63,9 +63,10 @@ module.exports = createCoreService('api::stripe-payment.stripe-payment', ({ stra
 
             // Add credits of subscription
             if (credits) {
+                const creditsToAdd = selectedSubscriptionTime === 'year' ? credits : credits * 12;
                 const creditsResponse = AddCreditsService.handleStripeWebhook({
                     email,
-                    credits,
+                    credits: creditsToAdd,
                 });
 
                 strapi.log.info('Credits added successfully:', creditsResponse);
