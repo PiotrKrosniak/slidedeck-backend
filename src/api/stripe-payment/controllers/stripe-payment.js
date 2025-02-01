@@ -100,12 +100,13 @@ module.exports = createCoreController('api::stripe-payment.stripe-payment', ({ s
   },
   async createCheckoutSessionForSubscriptions(ctx) {
     try {
-      const { successUrl, cancelUrl, customerEmail, productId, priceId, selectedSubscriptionTime } = ctx.request.body;
+      const { successUrl, cancelUrl, customerEmail, productId, priceId } = ctx.request.body;
 
       const product = await stripe.products.retrieve(productId);
 
       // Extract the number of credits from the product metadata
       const credits = product.metadata.credits ? parseInt(product.metadata.credits, 10) : 0;
+      const price = await stripe.prices.retrieve(priceId);
 
       // Create a new Stripe Checkout session using the existing price
       const session = await stripe.checkout.sessions.create({
@@ -119,7 +120,7 @@ module.exports = createCoreController('api::stripe-payment.stripe-payment', ({ s
         ],
         metadata: {
           credits,
-          selectedSubscriptionTime: selectedSubscriptionTime,
+          selectedSubscriptionTime: price.recurring.interval,
         },
         customer_email: customerEmail, // Optional: Pre-fill the customer’s email if available
         success_url: successUrl,       // Redirect here on successful payment

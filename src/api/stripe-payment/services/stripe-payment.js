@@ -75,7 +75,7 @@ module.exports = createCoreService('api::stripe-payment.stripe-payment', ({ stra
 
             // Add credits of subscription
             if (credits) {
-                const creditsToAdd = selectedSubscriptionTime === 'year' ? credits : credits * 12;
+                const creditsToAdd = selectedSubscriptionTime === 'year' ? credits * 12 : credits;
                 const creditsResponse = AddCreditsService.handleStripeWebhook({
                     email,
                     credits: creditsToAdd,
@@ -84,8 +84,8 @@ module.exports = createCoreService('api::stripe-payment.stripe-payment', ({ stra
                 strapi.log.info('Credits added successfully:', creditsResponse);
             }
 
-            strapi.log.info('Subscription added successfully:', subscriptionResponse.data);
-            return subscriptionResponse.data;
+            strapi.log.info('Subscription added successfully:', subscription);
+            return subscription;
         } catch (err) {
             strapi.log.error('Error adding subscription via /subscription/add API:', err);
             throw err;

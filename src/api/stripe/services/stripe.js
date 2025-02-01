@@ -1,13 +1,6 @@
-const OpenAI = require('openai').default;
-const { v4: uuidv4 } = require('uuid');
-const axios = require('axios');
 const stripe = require('stripe')(process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY);
 
 class StripeService {
-  constructor() {
-    // Inicialización si es necesaria
-  }
-
   async getCreditAndSubscriptionPlans() {
     try {
       const products = await stripe.products.list({
@@ -26,7 +19,7 @@ class StripeService {
         });
 
         const hasSubscription = prices.data.some(price => price.type === 'recurring');
-        
+
         const formattedProduct = {
           id: product.id,
           name: product.name,
@@ -59,6 +52,25 @@ class StripeService {
       };
     } catch (error) {
       throw new Error(`Failed to fetch products: ${error.message}`);
+    }
+  }
+  async getSubscriptionStatus(subscriptionId) {
+    try {
+      const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+      const nextBillingDate = new Date(subscription.current_period_end * 1000).toISOString();
+
+      for (const item of subscription.items.data) {
+        const product = await stripe.products.retrieve(item.price.product);
+
+        item.title = product.name;
+        item.metadata = product.metadata;
+      }
+
+      subscription.next_billing_date = nextBillingDate;
+
+      return subscription;
+    } catch (error) {
+      throw new Error(`Failed to retrieve subscription details: ${error.message}`);
     }
   }
 }
