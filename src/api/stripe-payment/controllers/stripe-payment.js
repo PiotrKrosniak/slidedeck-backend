@@ -48,4 +48,93 @@ module.exports = createCoreController('api::stripe-payment.stripe-payment', ({ s
       ctx.send({ error: 'Failed to create checkout session' }, 500);
     }
   },
+  async createCheckoutSessionForCredits(ctx) {
+    try {
+      const { successUrl, cancelUrl, customerEmail, productId } = ctx.request.body;
+
+      // Fetch the existing price(s) associated with the product
+      const prices = await stripe.prices.list({
+        product: productId,
+        active: true,
+        limit: 1, // Assuming you need the latest price
+      });
+
+      if (!prices.data.length) {
+        return ctx.send({ error: 'No active price found for this product' }, 400);
+      }
+
+      const product = await stripe.products.retrieve(productId);
+
+      // Extract the number of credits from the product metadata
+      const credits = product.metadata.credits ? parseInt(product.metadata.credits, 10) : 0;
+
+      const priceId = prices.data[0].id; // Use the existing price ID
+
+      // Create a new Stripe Checkout session using the existing price
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'payment',
+        line_items: [
+          {
+            price: priceId, // Use the existing price ID
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          credits,
+        },
+        customer_email: customerEmail, // Optional: Pre-fill the customer’s email if available
+        success_url: successUrl,       // Redirect here on successful payment
+        cancel_url: cancelUrl,         // Redirect here if the user cancels payment
+      });
+
+      // Return the session ID and URL for the frontend
+      ctx.send({
+        id: session.id,
+        url: session.url, // Stripe Checkout URL
+      });
+    } catch (err) {
+      console.log(err);
+      ctx.send({ error: 'Failed to create checkout session' }, 500);
+    }
+  },
+  async createCheckoutSessionForSubscriptions(ctx) {
+    try {
+      const { successUrl, cancelUrl, customerEmail, productId, priceId } = ctx.request.body;
+
+      const product = await stripe.products.retrieve(productId);
+
+      // Extract the number of credits from the product metadata
+      const credits = product.metadata.credits ? parseInt(product.metadata.credits, 10) : 0;
+      const price = await stripe.prices.retrieve(priceId);
+
+      // Create a new Stripe Checkout session using the existing price
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        mode: 'subscription',
+        line_items: [
+          {
+            price: priceId, // Use the existing price ID
+            quantity: 1,
+          },
+        ],
+        metadata: {
+          credits,
+          selectedSubscriptionTime: price.recurring.interval,
+        },
+        customer_email: customerEmail, // Optional: Pre-fill the customer’s email if available
+        success_url: successUrl,       // Redirect here on successful payment
+        cancel_url: cancelUrl,         // Redirect here if the user cancels payment
+      });
+
+      // Return the session ID and URL for the frontend
+      ctx.send({
+        id: session.id,
+        url: session.url, // Stripe Checkout URL
+      });
+    } catch (err) {
+      console.log(err);
+      ctx.send({ error: 'Failed to create checkout session' }, 500);
+    }
+  },
 }));

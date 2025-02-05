@@ -1,5 +1,4 @@
 const stripe = require('stripe')(process.env.STRAPI_ADMIN_TEST_STRIPE_SECRET_KEY); // Ensure Stripe secret key is in your .env file
-const axios = require('axios');
 
 module.exports = {
   async handleStripeWebhook(ctx) {
@@ -27,34 +26,42 @@ module.exports = {
       console.log('Session:', session);
 
       if (session.mode !== 'subscription') {
+
+        // handle marketplace project duplication event
         // Ensure metadata fields are present
         const projectId = session.metadata.projectId;
         const userId = session.metadata.userId;
         const oldUserId = session.metadata.oldUserId;
 
         if (projectId && userId && oldUserId) {
-          console.log('Project ID:', projectId);
-          console.log('User ID:', userId);
-          console.log('Old User ID:', oldUserId);
-
-          try {
-            // Call the existing Strapi API endpoint to duplicate the project
-            const duplicationResponse = await axios.post(`${process.env.BACKEND_URL}/api/projects/duplicate`, {
-              data: {
-                originalProjectId: projectId,
-                oldUserId: oldUserId,
-                newUserId: userId,
-              },
-            });
-
-            console.log('Project duplicated successfully:', duplicationResponse.data);
-          } catch (err) {
-            console.error('Error duplicating project via /projects/duplicate API:', err);
-          }
+          strapi.service('api::stripe-payment.stripe-payment').handleProjectDuplicationEvent({
+            projectId,
+            userId,
+            oldUserId,
+          })
         } else {
           console.error('Missing metadata fields for project duplication.');
         }
+
+        const credits = session.metadata.credits;
+
+        if (credits) {
+          strapi.service('api::stripe-payment.stripe-payment').handleCreditsPurchaseEvent({
+            email: session.customer_details.email,
+            credits,
+          });
+        }
       }
+
+      else if (session.mode === 'subscription') {
+        strapi.service('api::stripe-payment.stripe-payment').handleSubscriptionEvent({
+          email: session.customer_details.email,
+          subscription: session.subscription,
+          credits: session?.metadata?.credits,
+          selectedSubscriptionTime: session?.metadata?.selectedSubscriptionTime,
+        });
+      }
+
     }
 
     // Return 200 to acknowledge receipt of the event
