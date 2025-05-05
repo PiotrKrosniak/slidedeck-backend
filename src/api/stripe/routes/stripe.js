@@ -16,6 +16,11 @@ module.exports = {
           enabled: true,
         },
       }
+    },
+    {
+      method: 'POST',
+      path: '/stripe/generate-invoice',
+      handler: 'stripe.generateInvoice',
     }
   ]
 }

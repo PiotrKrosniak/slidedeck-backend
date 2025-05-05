@@ -73,6 +73,22 @@ class StripeService {
       throw new Error(`Failed to retrieve subscription details: ${error.message}`);
     }
   }
+
+  async createInvoiceItem(data) {
+    return await stripe.invoiceItems.create({
+      customer: data.customer,
+      amount: data.amount,
+      currency: data.currency,
+      description: data.description,
+    });
+  }
+
+  async createInvoice(data) {
+    return await stripe.invoices.create({
+      customer: data.customer,
+      auto_advance: data.auto_advance,
+    });
+  }
 }
 
 module.exports = new StripeService();
