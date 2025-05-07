@@ -27,14 +27,14 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
 
     // Fetch the projects with pagination and filters applied
     const projects = await strapi.entityService.findMany("api::project.project", {
-      filters,
-      populate: {
-        project_image: true,
-        tags: true,
-      },
-      sort: { createdAt: "asc" },
-      start,
-      limit,
+        filters,
+        populate: {
+          project_image: true,
+          tags: true,
+        },
+        sort: { createdAt: "asc" },
+        start,
+        limit,
     });
 
     // Optionally, you can populate user details if needed
@@ -44,7 +44,7 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
         let user = null;
         if (project.user_id) {
           user = await strapi.entityService.findMany('plugin::users-permissions.user', {
-            filters: { user_id: project.user_id },
+              filters: { user_id: project.user_id },
             fields: ['id', 'username', 'email', 'user_id'],
           });
         }
@@ -132,17 +132,29 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
     const { id } = ctx.params;
 
     // Find the project by project_id
-    const entity = await strapi.db.query("api::project.project").findOne({
+    const project = await strapi.db.query("api::project.project").findOne({
       where: { project_id: id },
     });
 
-    if (!entity) {
+    if (!project) {
       return ctx.notFound("Project not found");
     }
+    // Find the course by project_id
+    const course = await strapi.db.query("api::course.course").findOne({
+      where: { project_id: id },
+    });
 
     // Delete the project
-    await strapi.entityService.delete("api::project.project", entity.id);
-    return { message: "Project deleted successfully" };
+    await strapi.entityService.delete("api::project.project", project.id);
+    // Delete the course
+    if (course) {
+      await strapi.entityService.delete("api::course.course", course.id);
+    }
+    return {
+      message: course
+        ? "Project and course deleted successfully"
+        : "Project deleted successfully",
+    };
   },
   async update(ctx) {
     const { id } = ctx.params;
@@ -156,16 +168,16 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
     try {
       // Update the project by project_id
       const updatedEntity = await strapi.db.query("api::project.project").update({
-        where: { project_id: id },
-        data,
-        populate: {
-          project_image: true,
-          slides: {
+          where: { project_id: id },
+          data,
+          populate: {
+            project_image: true,
+            slides: {
             select: ['id', 'name', 'slide_id', 'objects', 'thumbnail'],  // Specify only the fields you want from slides
+            },
+            tags: true,
           },
-          tags: true,
-        },
-      });
+        });
 
       if (!updatedEntity) {
         return ctx.notFound("Project not found");
@@ -187,11 +199,11 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
 
       // Fetch the original project and populate slides
       const originalProject = await strapi.db.query("api::project.project").findOne({
-        where: { project_id: originalProjectId },
-        populate: {
-          slides: true,
-        },
-      });
+          where: { project_id: originalProjectId },
+          populate: {
+            slides: true,
+          },
+        });
 
       if (!originalProject) return ctx.badRequest("Project not found");
 
@@ -229,34 +241,34 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       });
 
       const newSlides = await Promise.all(slides.map(async (slide) => {
-        const { id, name, thumbnail, slide_id, ...slideData } = slide; // Assuming 'objects' is where the assets like images are stored
+          const { id, name, thumbnail, slide_id, ...slideData } = slide; // Assuming 'objects' is where the assets like images are stored
 
-        // Check if the slide has 'objects' and if it is stored as a string
+          // Check if the slide has 'objects' and if it is stored as a string
         if (slideData.objects && typeof slideData.objects === 'string') {
-          // Parse the stringified JSON into an array
-          let objectsArray = JSON.parse(slideData.objects);
+            // Parse the stringified JSON into an array
+            let objectsArray = JSON.parse(slideData.objects);
 
-          // Iterate through the objects array and update URLs
+            // Iterate through the objects array and update URLs
           const updatedObjects = await Promise.all(objectsArray.map(async (obj) => {
-            if (obj.src) {
-              console.log("Starting to copy asset");
+                if (obj.src) {
+                  console.log("Starting to copy asset");
               const newAssetUrl = await strapi.service("api::project.copy-s3-objects").copyAssetBetweenUsers(obj.src, oldUserId, newUserId);
-              obj.src = newAssetUrl; // Update the src with the new URL
-            }
-            return obj; // Return the updated object
+                  obj.src = newAssetUrl; // Update the src with the new URL
+                }
+                return obj; // Return the updated object
           }));
 
-          // Stringify the updated objects array back into a JSON string
-          slideData.objects = JSON.stringify(updatedObjects);
-        }
+            // Stringify the updated objects array back into a JSON string
+            slideData.objects = JSON.stringify(updatedObjects);
+          }
 
-        slideData.name = `${name} Copy`;
-        slideData.project_id = newProject.project_id;
+          slideData.name = `${name} Copy`;
+          slideData.project_id = newProject.project_id;
 
-        // Create the new slide with updated asset URLs
-        return await strapi.service("api::slide.slide").create({
+          // Create the new slide with updated asset URLs
+          return await strapi.service("api::slide.slide").create({
           data: slideData
-        });
+          });
       }));
 
       // Attach duplicated slides to the new project
@@ -273,7 +285,7 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       ctx.throw(500, error);
     }
   },
-  
+
   async updateSlides(ctx) {
     try {
       const { id } = ctx.params;
