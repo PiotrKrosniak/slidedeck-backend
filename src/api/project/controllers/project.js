@@ -48,8 +48,20 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
             fields: ['id', 'username', 'email', 'user_id'],
           });
         }
+        const projectWithSlides = await strapi.entityService.findOne(
+          "api::project.project",
+          project.id,
+          {
+            populate: {
+              slides: {
+                fields: ["id", "name", "slide_id", "objects", "thumbnail"],
+              },
+            },
+          }
+        );
         return {
           ...project,
+          slides: projectWithSlides.slides || [],
           user, // Add user details to the project
         };
       })
