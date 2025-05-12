@@ -62,11 +62,23 @@ class StripeService {
       for (const item of subscription.items.data) {
         const product = await stripe.products.retrieve(item.price.product);
 
+
+        const teamFeature = product.marketing_features[2]?.name || '';
+        const supportFeature = product.marketing_features[3]?.name || '';
+        
+        const teamValue = teamFeature.slice(teamFeature.indexOf(':') + 1).trim();
+        const supportValue = supportFeature.slice(supportFeature.indexOf(':') + 1).trim();
+        
         item.title = product.name;
-        item.metadata = product.metadata;
+        item.metadata = {
+          ...product.metadata,
+          team: teamValue,
+          support: supportValue,
+        };
       }
 
       subscription.next_billing_date = nextBillingDate;
+
 
       return subscription;
     } catch (error) {
