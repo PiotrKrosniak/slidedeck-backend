@@ -8,28 +8,41 @@ const { createCoreController } = require("@strapi/strapi").factories;
 const copyAssetBetweenUsers = require("../services/copy-s3-objects");
 
 module.exports = createCoreController("api::project.project", ({ strapi }) => ({
-  // Find method to retrieve multiple projects
   async find(ctx) {
-    // Since you're using API Token authentication, ctx.state.user is undefined.
-    // We can remove user authentication checks or adjust them accordingly.
-
-    // Correctly handle pagination
     let { start = 0, limit = 30 } = ctx.query.pagination || {};
     start = parseInt(start, 10);
     limit = parseInt(limit, 10);
 
     const filters = ctx.query.filters || {};
 
-    // Fetch the total count of filtered projects
+    const searchQuery = ctx.query.search;
+
+    const searchFilters = { ...filters };
+
+    if (searchQuery && searchQuery.trim()) {
+      searchFilters.$or = [
+        {
+          name: {
+            $containsi: searchQuery.trim(),
+          },
+        },
+        {
+          description: {
+            $containsi: searchQuery.trim(),
+          },
+        },
+      ];
+    }
+
     const total = await strapi.entityService.count("api::project.project", {
-      filters,
+      filters: searchFilters,
     });
 
-    // Fetch the projects with pagination and filters applied
+    // Fetch the projects with pagination, filters, and search applied
     const projects = await strapi.entityService.findMany(
       "api::project.project",
       {
-        filters,
+        filters: searchFilters,
         populate: {
           project_image: true,
           tags: true,
@@ -122,27 +135,6 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
 
     return this.transformResponse(sanitizedEntity);
   },
-
-  // // Update an existing project
-  // async update(ctx) {
-  //   const { id } = ctx.params;
-  //   const { body } = ctx.request;
-  //   const files = ctx.request?.files;
-
-  //   // Update the project by project_id
-  //   const entity = await strapi.service("api::project.project").update({
-  //     where: { project_id: id },
-  //     data: { ...body },
-  //     files,
-  //   });
-
-  //   if (!entity) {
-  //     return ctx.notFound("Project not found");
-  //   }
-
-  //   const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
-  //   return this.transformResponse(sanitizedEntity);
-  // },
 
   // Delete a project by project_id
   async delete(ctx) {
