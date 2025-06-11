@@ -15,7 +15,9 @@
     "name": {
       "type": "string",
       "minLength": 2,
-      "required": true
+      "required": true,
+      "unique": true
+
     },
     "project_id": {
       "type": "uid",

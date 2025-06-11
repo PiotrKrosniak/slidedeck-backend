@@ -13,7 +13,8 @@
   "pluginOptions": {},
   "attributes": {
     "title": {
-      "type": "string"
+      "type": "string",
+      "unique": true
     },
     "course_url": {
       "type": "string"

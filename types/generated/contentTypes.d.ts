@@ -506,7 +506,7 @@ export interface ApiCourseCourse extends Schema.CollectionType {
     project_id: Attribute.String;
     publishedAt: Attribute.DateTime;
     status: Attribute.String;
-    title: Attribute.String;
+    title: Attribute.String & Attribute.Unique;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::course.course',
@@ -860,6 +860,7 @@ export interface ApiProjectProject extends Schema.CollectionType {
     likes: Attribute.Integer;
     name: Attribute.String &
       Attribute.Required &
+      Attribute.Unique &
       Attribute.SetMinMaxLength<{
         minLength: 2;
       }>;
