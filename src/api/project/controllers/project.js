@@ -26,16 +26,19 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
     });
 
     // Fetch the projects with pagination and filters applied
-    const projects = await strapi.entityService.findMany("api::project.project", {
+    const projects = await strapi.entityService.findMany(
+      "api::project.project",
+      {
         filters,
         populate: {
           project_image: true,
           tags: true,
         },
-        sort: { createdAt: "asc" },
+        sort: { updatedAt: "desc" },
         start,
         limit,
-    });
+      }
+    );
 
     // Optionally, you can populate user details if needed
     // For each project, fetch the associated user details based on 'user_id' if available
@@ -43,10 +46,13 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       projects.map(async (project) => {
         let user = null;
         if (project.user_id) {
-          user = await strapi.entityService.findMany('plugin::users-permissions.user', {
+          user = await strapi.entityService.findMany(
+            "plugin::users-permissions.user",
+            {
               filters: { user_id: project.user_id },
-            fields: ['id', 'username', 'email', 'user_id'],
-          });
+              fields: ["id", "username", "email", "user_id"],
+            }
+          );
         }
         const projectWithSlides = await strapi.entityService.findOne(
           "api::project.project",
@@ -87,7 +93,7 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       populate: {
         project_image: true,
         slides: {
-          select: ['id', 'name', 'slide_id', 'objects', 'thumbnail'],  // Specify only the fields you want from slides
+          select: ["id", "name", "slide_id", "objects", "thumbnail"], // Specify only the fields you want from slides
         },
         tags: true,
       },
@@ -96,7 +102,6 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
     if (!entity) {
       return ctx.notFound("Project not found");
     }
-
 
     const sanitizedEntity = await this.sanitizeOutput(entity, ctx);
     return this.transformResponse(sanitizedEntity);
@@ -179,13 +184,15 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
 
     try {
       // Update the project by project_id
-      const updatedEntity = await strapi.db.query("api::project.project").update({
+      const updatedEntity = await strapi.db
+        .query("api::project.project")
+        .update({
           where: { project_id: id },
           data,
           populate: {
             project_image: true,
             slides: {
-            select: ['id', 'name', 'slide_id', 'objects', 'thumbnail'],  // Specify only the fields you want from slides
+              select: ["id", "name", "slide_id", "objects", "thumbnail"], // Specify only the fields you want from slides
             },
             tags: true,
           },
@@ -199,7 +206,10 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       // Return only the updated fields
       return this.transformResponse({ updatedFields: data });
     } catch (error) {
-      return ctx.internalServerError("An error occurred while updating the project", { error });
+      return ctx.internalServerError(
+        "An error occurred while updating the project",
+        { error }
+      );
     }
   },
   async duplicate(ctx) {
@@ -210,7 +220,9 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       console.log("newUserId", newUserId);
 
       // Fetch the original project and populate slides
-      const originalProject = await strapi.db.query("api::project.project").findOne({
+      const originalProject = await strapi.db
+        .query("api::project.project")
+        .findOne({
           where: { project_id: originalProjectId },
           populate: {
             slides: true,
@@ -221,7 +233,7 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
 
       // Prepare project data for duplication
       const {
-        id,  // remove the original ID
+        id, // remove the original ID
         user_id,
         project_id, // remove the original project_id
         name,
@@ -233,42 +245,47 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
       } = originalProject;
 
       // Set fields to null or empty
-      projectData.project_id = null;   // Set empty project ID (or use `null`)
-      projectData.createdAt = null;  // Reset creation date
-      projectData.updatedAt = null;  // Reset update date
+      projectData.project_id = null; // Set empty project ID (or use `null`)
+      projectData.createdAt = null; // Reset creation date
+      projectData.updatedAt = null; // Reset update date
       projectData.publishedAt = null; // Reset publication date
-      projectData.user_id = newUserId;  // Set the new user
-      projectData.status = "private";  // Set the new user
-      projectData.deployed = false;  // Set the new user
-      projectData.purchases = null;  // Set the new user
-      projectData.price = null;  // Set the new user
-      projectData.likes = null;  // Set the new user
-      projectData.views = null;  // Set the new user
-      projectData.comments = null;  // Set the new user
+      projectData.user_id = newUserId; // Set the new user
+      projectData.status = "private"; // Set the new user
+      projectData.deployed = false; // Set the new user
+      projectData.purchases = null; // Set the new user
+      projectData.price = null; // Set the new user
+      projectData.likes = null; // Set the new user
+      projectData.views = null; // Set the new user
+      projectData.comments = null; // Set the new user
       projectData.name = `${name} Copy`;
 
       // Create the new project
       const newProject = await strapi.service("api::project.project").create({
-        body: projectData
+        body: projectData,
       });
 
-      const newSlides = await Promise.all(slides.map(async (slide) => {
+      const newSlides = await Promise.all(
+        slides.map(async (slide) => {
           const { id, name, thumbnail, slide_id, ...slideData } = slide; // Assuming 'objects' is where the assets like images are stored
 
           // Check if the slide has 'objects' and if it is stored as a string
-        if (slideData.objects && typeof slideData.objects === 'string') {
+          if (slideData.objects && typeof slideData.objects === "string") {
             // Parse the stringified JSON into an array
             let objectsArray = JSON.parse(slideData.objects);
 
             // Iterate through the objects array and update URLs
-          const updatedObjects = await Promise.all(objectsArray.map(async (obj) => {
+            const updatedObjects = await Promise.all(
+              objectsArray.map(async (obj) => {
                 if (obj.src) {
                   console.log("Starting to copy asset");
-              const newAssetUrl = await strapi.service("api::project.copy-s3-objects").copyAssetBetweenUsers(obj.src, oldUserId, newUserId);
+                  const newAssetUrl = await strapi
+                    .service("api::project.copy-s3-objects")
+                    .copyAssetBetweenUsers(obj.src, oldUserId, newUserId);
                   obj.src = newAssetUrl; // Update the src with the new URL
                 }
                 return obj; // Return the updated object
-          }));
+              })
+            );
 
             // Stringify the updated objects array back into a JSON string
             slideData.objects = JSON.stringify(updatedObjects);
@@ -279,14 +296,15 @@ module.exports = createCoreController("api::project.project", ({ strapi }) => ({
 
           // Create the new slide with updated asset URLs
           return await strapi.service("api::slide.slide").create({
-          data: slideData
+            data: slideData,
           });
-      }));
+        })
+      );
 
       // Attach duplicated slides to the new project
       await strapi.db.query("api::project.project").update({
         where: { id: newProject.id },
-        data: { slides: newSlides.map(slide => slide.id) }
+        data: { slides: newSlides.map((slide) => slide.id) },
       });
 
       // Optionally return the new project with duplicated slides
